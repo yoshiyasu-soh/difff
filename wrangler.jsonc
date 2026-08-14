@@ -6,5 +6,8 @@
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS"
-  }
+  },
+  "kv_namespaces": [
+    { "binding": "DIFFF_KV", "id": "local-dev-placeholder-id" }
+  ]
 }
