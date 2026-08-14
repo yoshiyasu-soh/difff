@@ -20,9 +20,13 @@ describe('handlePage', () => {
     const html = await res.text();
     expect(html).toContain('id="difff-preload"');
     expect(html).toContain('"a":"hello \\u003cb>"');
-    expect(html).not.toContain('</script>');
     const match = html.match(/<script id="difff-preload" type="application\/json">([^]*?)<\/script>/);
     expect(match).not.toBeNull();
+    // The injected payload itself must never contain a literal </script> (it can't,
+    // since escapeForInlineScript replaces every `<`, but this is the actual early-
+    // termination risk — checking the whole page here would also match the static
+    // shell's own unrelated <script type="module"> tag).
+    expect(match![1]).not.toContain('</script>');
     const preload = JSON.parse(match![1]) as { a: string; b: string };
     expect(preload.a).toBe('hello <b>');
   });
