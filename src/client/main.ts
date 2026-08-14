@@ -1,6 +1,11 @@
 import { renderResultTable, formatStatsLine } from './render.js';
 import type { DiffResult } from '../core/types.js';
 import type { WorkerRequest, WorkerResponse } from './diff.worker.js';
+import { ja } from '../i18n/ja.js';
+import { en } from '../i18n/en.js';
+import type { Messages } from '../i18n/messages.js';
+
+const messages: Messages = document.documentElement.lang === 'en' ? en : ja;
 
 const form = document.querySelector<HTMLFormElement>('#difff-form')!;
 const textareaA = document.querySelector<HTMLTextAreaElement>('#sequenceA')!;
@@ -34,7 +39,7 @@ function startCompare(a: string, b: string): void {
       statsB.textContent = formatStatsLine(result.statsB);
       resultSection.hidden = false;
     } else {
-      window.alert(`比較に失敗しました: ${event.data.error}`);
+      window.alert(messages.compareFailure(event.data.error));
     }
     worker?.terminate();
     worker = null;
@@ -60,7 +65,7 @@ cancelBtn.addEventListener('click', () => {
 hideFormBtn.addEventListener('click', () => {
   const isFormVisible = form.style.display !== 'none';
   form.style.display = isFormVisible ? 'none' : '';
-  hideFormBtn.textContent = isFormVisible ? '全体を表示' : '結果のみ表示 (印刷用)';
+  hideFormBtn.textContent = isFormVisible ? messages.showAll : messages.hideForm;
 });
 
 document.querySelectorAll<HTMLInputElement>('input[name="color"]').forEach((radio) => {
@@ -94,11 +99,11 @@ publishBtn.addEventListener('click', async () => {
   publishResult.hidden = false;
   if (res.ok && json.id) {
     const url = `${location.origin}/${json.id}`;
-    publishResult.textContent = `公開しました: ${url}`;
+    publishResult.textContent = messages.publishSuccess(url);
     currentPageId = json.id;
     deleteSection.hidden = false;
   } else {
-    publishResult.textContent = `失敗しました: ${json.error ?? 'unknown error'}`;
+    publishResult.textContent = messages.publishFailure(json.error ?? 'unknown error');
   }
 });
 
@@ -111,7 +116,7 @@ deleteBtn.addEventListener('click', async () => {
   });
   const json = (await res.json()) as { ok?: boolean; error?: string };
   deleteResult.hidden = false;
-  deleteResult.textContent = res.ok ? '削除しました' : `失敗しました: ${json.error ?? 'unknown error'}`;
+  deleteResult.textContent = res.ok ? messages.deleteSuccess : messages.deleteFailure(json.error ?? 'unknown error');
 });
 
 function loadPreload(): void {
