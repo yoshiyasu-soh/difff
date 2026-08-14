@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>difff - online text compare</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header id="top">
+  <h1><a href="/en/">difff</a></h1>
+  <nav>
+    <a href="/">Japanese</a>
+  </nav>
+</header>
+
+<main>
+  <form id="difff-form">
+    <p>Input two texts below and click 'compare':</p>
+    <div class="panes">
+      <textarea id="sequenceA" name="sequenceA" rows="20" placeholder="Text A"></textarea>
+      <textarea id="sequenceB" name="sequenceB" rows="20" placeholder="Text B"></textarea>
+    </div>
+    <div class="actions">
+      <button type="submit" id="compare-btn">compare</button>
+      <button type="button" id="cancel-btn" hidden>cancel</button>
+      <span id="progress" hidden>computing…</span>
+    </div>
+  </form>
+
+  <section id="result" hidden>
+    <table id="result-table" cellspacing="0"></table>
+    <p id="stats-a"></p>
+    <p id="stats-b"></p>
+    <div class="result-controls">
+      <button type="button" id="hide-form-btn">Hide form (print friendly)</button>
+      <label><input type="radio" name="color" value="1" checked> Color 1</label>
+      <label><input type="radio" name="color" value="2"> Color 2</label>
+      <label><input type="radio" name="color" value="3"> Black &amp; White</label>
+    </div>
+  </section>
+
+  <section id="publish">
+    <h2>Create public link</h2>
+    <p>You can make a public link and share this result.<br>
+    Public link will expire in <strong>three days</strong>.</p>
+    <label>Set password: <input type="password" id="publish-passwd"></label>
+    <button type="button" id="publish-btn">Publish</button>
+    <p id="publish-result" hidden></p>
+  </section>
+
+  <section id="delete-page" hidden>
+    <h2>Delete this page</h2>
+    <label>Password: <input type="password" id="delete-passwd"></label>
+    <button type="button" id="delete-btn">Delete</button>
+    <p id="delete-result" hidden></p>
+  </section>
+</main>
+
+<script type="module" src="/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>difff《ﾃﾞｭﾌﾌ》- テキスト比較ツール</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header id="top">
+  <h1><a href="/">difff《ﾃﾞｭﾌﾌ》</a></h1>
+  <nav>
+    <a href="/en/">English</a>
+  </nav>
+</header>
+
+<main>
+  <form id="difff-form">
+    <p>下の枠に比較したい文章を入れてください。差分 (diff) を表示します。</p>
+    <div class="panes">
+      <textarea id="sequenceA" name="sequenceA" rows="20" placeholder="テキストA"></textarea>
+      <textarea id="sequenceB" name="sequenceB" rows="20" placeholder="テキストB"></textarea>
+    </div>
+    <div class="actions">
+      <button type="submit" id="compare-btn">比較する</button>
+      <button type="button" id="cancel-btn" hidden>キャンセル</button>
+      <span id="progress" hidden>計算中…</span>
+    </div>
+  </form>
+
+  <section id="result" hidden>
+    <table id="result-table" cellspacing="0"></table>
+    <p id="stats-a"></p>
+    <p id="stats-b"></p>
+    <div class="result-controls">
+      <button type="button" id="hide-form-btn">結果のみ表示 (印刷用)</button>
+      <label><input type="radio" name="color" value="1" checked> カラー1</label>
+      <label><input type="radio" name="color" value="2"> カラー2</label>
+      <label><input type="radio" name="color" value="3"> モノクロ</label>
+    </div>
+  </section>
+
+  <section id="publish">
+    <h2>この結果を公開する</h2>
+    <p>この結果を保存し、公開用のURLを発行します。削除パスワードを設定しておけば、あとで消すこともできます。<br>
+    <strong>公開期間は3日間です。</strong></p>
+    <label>削除パスワード: <input type="password" id="publish-passwd"></label>
+    <button type="button" id="publish-btn">結果を公開する</button>
+    <p id="publish-result" hidden></p>
+  </section>
+
+  <section id="delete-page" hidden>
+    <h2>このページを削除する</h2>
+    <label>削除パスワード: <input type="password" id="delete-passwd"></label>
+    <button type="button" id="delete-btn">削除する</button>
+    <p id="delete-result" hidden></p>
+  </section>
+</main>
+
+<script type="module" src="/main.js"></script>
+</body>
+</html>
