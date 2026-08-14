@@ -68,3 +68,61 @@ document.querySelectorAll<HTMLInputElement>('input[name="color"]').forEach((radi
     document.body.dataset.colorScheme = radio.value;
   });
 });
+
+const publishBtn = document.querySelector<HTMLButtonElement>('#publish-btn')!;
+const publishPasswd = document.querySelector<HTMLInputElement>('#publish-passwd')!;
+const publishResult = document.querySelector<HTMLElement>('#publish-result')!;
+const deleteSection = document.querySelector<HTMLElement>('#delete-page')!;
+const deleteBtn = document.querySelector<HTMLButtonElement>('#delete-btn')!;
+const deletePasswd = document.querySelector<HTMLInputElement>('#delete-passwd')!;
+const deleteResult = document.querySelector<HTMLElement>('#delete-result')!;
+
+let currentPageId: string | null = null;
+
+publishBtn.addEventListener('click', async () => {
+  const res = await fetch('/api/save', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      lang: document.documentElement.lang === 'en' ? 'en' : 'ja',
+      a: textareaA.value,
+      b: textareaB.value,
+      passwd: publishPasswd.value,
+    }),
+  });
+  const json = (await res.json()) as { id?: string; error?: string };
+  publishResult.hidden = false;
+  if (res.ok && json.id) {
+    const url = `${location.origin}/${json.id}`;
+    publishResult.textContent = `公開しました: ${url}`;
+    currentPageId = json.id;
+    deleteSection.hidden = false;
+  } else {
+    publishResult.textContent = `失敗しました: ${json.error ?? 'unknown error'}`;
+  }
+});
+
+deleteBtn.addEventListener('click', async () => {
+  if (!currentPageId) return;
+  const res = await fetch('/api/delete', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ id: currentPageId, passwd: deletePasswd.value }),
+  });
+  const json = (await res.json()) as { ok?: boolean; error?: string };
+  deleteResult.hidden = false;
+  deleteResult.textContent = res.ok ? '削除しました' : `失敗しました: ${json.error ?? 'unknown error'}`;
+});
+
+function loadPreload(): void {
+  const el = document.querySelector('#difff-preload');
+  if (!el || !el.textContent) return;
+  const data = JSON.parse(el.textContent) as { id: string; a: string; b: string };
+  textareaA.value = data.a;
+  textareaB.value = data.b;
+  currentPageId = data.id;
+  deleteSection.hidden = false;
+  startCompare(data.a, data.b);
+}
+
+loadPreload();
