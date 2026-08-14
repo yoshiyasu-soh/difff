@@ -1,5 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 import { handleSave } from './save.js';
+import { handleDelete } from './delete.js';
 
 export interface Env {
   DIFFF_KV: KVNamespace;
@@ -8,12 +9,6 @@ export interface Env {
 
 // 公開ID: a-k, m, n, p-z, 2-9 の32文字から成る5文字（0, o, 1, l を除外）
 const ID_RE = /^\/([a-km-np-z2-9]{5})(\.html)?$/;
-
-// TODO(Task 15): src/worker/delete.ts が実装され次第、この inline スタブを
-// `import { handleDelete } from './delete.js';` に置き換える。
-async function handleDelete(request: Request, env: Env): Promise<Response> {
-  return new Response('Not Implemented', { status: 501 });
-}
 
 // TODO(Task 16): src/worker/page.ts が実装され次第、この inline スタブを
 // `import { handlePage } from './page.js';` に置き換える。
