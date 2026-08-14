@@ -47,6 +47,9 @@ export async function handleSave(request: Request, env: Env): Promise<Response> 
   const b = body.b ?? '';
   const passwd = body.passwd ?? '';
 
+  if (typeof a !== 'string' || typeof b !== 'string' || typeof passwd !== 'string') {
+    return Response.json({ error: 'invalid body' }, { status: 400 });
+  }
   if (a.length + b.length > MAX_TOTAL_CHARS) {
     return Response.json({ error: 'input too large' }, { status: 413 });
   }

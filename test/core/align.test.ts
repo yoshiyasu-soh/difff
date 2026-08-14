@@ -81,4 +81,28 @@ describe('buildRowPairs', () => {
     expect(allA).toContain('<em>');
     expect(allB).toContain('<em>');
   });
+
+  it('marks a fully deleted blank line instead of hiding it (final-review I-1)', () => {
+    // 'a\n\n\nb' (空行2つ) vs 'a\n\nb' (空行1つ) — Aだけ空行が1つ多い
+    const rows = diffOf('a\n\n\nb', 'a\n\nb');
+    const allA = rows.map((r) => r.a).join('|');
+    expect(allA).toContain('<em></em>');
+  });
+
+  it('does not collapse a real trailing blank-line diff into nothing (final-review I-1)', () => {
+    // 'a\n\n\n' (末尾に空行2つ) vs 'a\n' (末尾に空行なし)
+    const rows = diffOf('a\n\n\n', 'a\n');
+    expect(rows.length).toBeGreaterThan(1);
+    const allA = rows.map((r) => r.a).join('|');
+    expect(allA).toContain('<em></em>');
+  });
+
+  it('still drops exactly one phantom trailing row when both texts end with a newline and have no other diff', () => {
+    const rows = diffOf('a\n\n\n', 'a\n\n\n');
+    expect(rows).toEqual([
+      { a: 'a', b: 'a' },
+      { a: '', b: '' },
+      { a: '', b: '' },
+    ]);
+  });
 });

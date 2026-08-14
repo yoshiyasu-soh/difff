@@ -13,6 +13,11 @@ export async function handleDelete(request: Request, env: Env): Promise<Response
 
   const id = body.id ?? '';
   const passwd = body.passwd ?? '';
+
+  if (typeof id !== 'string' || typeof passwd !== 'string') {
+    return Response.json({ error: 'invalid body' }, { status: 400 });
+  }
+
   const key = `page:${id}`;
 
   const raw = await env.DIFFF_KV.get(key);

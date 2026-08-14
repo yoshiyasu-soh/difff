@@ -78,7 +78,13 @@ export function buildRowPairs(tokensA: string[], tokensB: string[], ops: DiffOp[
       for (let i = op.aLo; i < op.aHi; i++) {
         const tok = tokensA[i];
         if (tok === NEWLINE) {
-          closeEmA();
+          if (emOpenA) {
+            closeEmA();
+          } else {
+            // 変更ブロック内の完全な空行。マークしないと共通の空行と区別が
+            // つかなくなり、差分が消えて見える(final-review I-1)。
+            curA = '<em></em>';
+          }
           pendingA.push(curA);
           curA = '';
         } else {
@@ -93,7 +99,11 @@ export function buildRowPairs(tokensA: string[], tokensB: string[], ops: DiffOp[
       for (let i = op.bLo; i < op.bHi; i++) {
         const tok = tokensB[i];
         if (tok === NEWLINE) {
-          closeEmB();
+          if (emOpenB) {
+            closeEmB();
+          } else {
+            curB = '<em></em>';
+          }
           pendingB.push(curB);
           curB = '';
         } else {
@@ -109,8 +119,16 @@ export function buildRowPairs(tokensA: string[], tokensB: string[], ops: DiffOp[
 
   flushSync(); // 末尾の行を確定
 
-  // 末尾の完全な空行（両テキストが改行で終わる場合に発生）を取り除く。
-  while (
+  // 両テキストが改行で終わる場合、実データに存在しない「改行の後の1行」が
+  // 余分に1行だけ出力される。差分としてマークされた行(<em></em>)は
+  // この条件に一致しないため、実際の空行差分(final-review I-1)は保持される。
+  // 入力が空文字列（トークン列が空）の場合も、末尾に「未確定の1行」は
+  // 実データとして存在しないため、改行終端と同様にphantom行として扱う。
+  const aEndsWithNewline = tokensA.length === 0 || tokensA[tokensA.length - 1] === NEWLINE;
+  const bEndsWithNewline = tokensB.length === 0 || tokensB[tokensB.length - 1] === NEWLINE;
+  if (
+    aEndsWithNewline &&
+    bEndsWithNewline &&
     output.length > 0 &&
     output[output.length - 1].a === '' &&
     output[output.length - 1].b === ''

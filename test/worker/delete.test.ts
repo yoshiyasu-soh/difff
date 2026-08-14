@@ -57,4 +57,26 @@ describe('handleDelete', () => {
     );
     expect(delRes.status).toBe(404);
   });
+
+  it('rejects a non-string id', async () => {
+    const delRes = await handleDelete(
+      new Request('http://internal/api/delete', {
+        method: 'POST',
+        body: JSON.stringify({ id: ['zzzzz'], passwd: 'anything' }),
+      }),
+      env as unknown as Env
+    );
+    expect(delRes.status).toBe(400);
+  });
+
+  it('rejects a non-string passwd', async () => {
+    const delRes = await handleDelete(
+      new Request('http://internal/api/delete', {
+        method: 'POST',
+        body: JSON.stringify({ id: 'zzzzz', passwd: { x: 1 } }),
+      }),
+      env as unknown as Env
+    );
+    expect(delRes.status).toBe(400);
+  });
 });

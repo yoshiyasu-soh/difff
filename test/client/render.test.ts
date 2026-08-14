@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { renderResultTable, formatStatsLine } from '../../src/client/render.js';
+import { renderResultTable } from '../../src/client/render.js';
 import type { DiffResult } from '../../src/core/types.js';
 
 describe('renderResultTable', () => {
@@ -29,15 +29,5 @@ describe('renderResultTable', () => {
     });
     expect(table.rows.length).toBe(1);
     expect(table.textContent).not.toContain('stale');
-  });
-});
-
-describe('formatStatsLine', () => {
-  it('derives space and newline counts from the cumulative totals', () => {
-    const line = formatStatsLine({ count1: 10, count2: 12, count3: 13, wordCount: 3 });
-    expect(line).toContain('文字数: 10');
-    expect(line).toContain('空白数: 2');
-    expect(line).toContain('改行数: 1');
-    expect(line).toContain('単語数: 3');
   });
 });

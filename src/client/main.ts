@@ -1,4 +1,4 @@
-import { renderResultTable, formatStatsLine } from './render.js';
+import { renderResultTable } from './render.js';
 import type { DiffResult } from '../core/types.js';
 import type { WorkerRequest, WorkerResponse } from './diff.worker.js';
 import { ja } from '../i18n/ja.js';
@@ -35,8 +35,8 @@ function startCompare(a: string, b: string): void {
     if (event.data.ok) {
       const result: DiffResult = event.data.result;
       renderResultTable(resultTable, result);
-      statsA.textContent = formatStatsLine(result.statsA);
-      statsB.textContent = formatStatsLine(result.statsB);
+      statsA.textContent = messages.stats(result.statsA);
+      statsB.textContent = messages.stats(result.statsB);
       resultSection.hidden = false;
     } else {
       window.alert(messages.compareFailure(event.data.error));

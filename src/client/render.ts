@@ -17,9 +17,3 @@ export function renderResultTable(table: HTMLTableElement, result: DiffResult): 
     table.append(tr);
   }
 }
-
-export function formatStatsLine(stats: CharCount): string {
-  const spaces = stats.count2 - stats.count1;
-  const newlines = stats.count3 - stats.count2;
-  return `文字数: ${stats.count1} / 空白数: ${spaces} (空白込み: ${stats.count2}) / 改行数: ${newlines} (改行込み: ${stats.count3}) / 単語数: ${stats.wordCount}`;
-}

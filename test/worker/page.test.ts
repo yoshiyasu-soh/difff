@@ -19,7 +19,12 @@ describe('handlePage', () => {
     expect(res.status).toBe(200);
     const html = await res.text();
     expect(html).toContain('id="difff-preload"');
-    expect(html).toContain('"a":"hello <b>"');
+    expect(html).toContain('"a":"hello \\u003cb>"');
+    expect(html).not.toContain('</script>');
+    const match = html.match(/<script id="difff-preload" type="application\/json">([^]*?)<\/script>/);
+    expect(match).not.toBeNull();
+    const preload = JSON.parse(match![1]) as { a: string; b: string };
+    expect(preload.a).toBe('hello <b>');
   });
 
   it('returns 404 for an unknown id', async () => {

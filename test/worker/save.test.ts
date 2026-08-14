@@ -39,4 +39,24 @@ describe('handleSave', () => {
     const res = await handleSave(request, env as unknown as Env);
     expect(res.status).toBe(400);
   });
+
+  it('rejects a non-string a (array) instead of letting the size cap be bypassed', async () => {
+    const request = new Request('http://internal/api/save', {
+      method: 'POST',
+      body: JSON.stringify({ lang: 'ja', a: ['x'.repeat(300_000)], b: 'y', passwd: '' }),
+    });
+    const res = await handleSave(request, env as unknown as Env);
+    expect(res.status).toBe(400);
+    const list = await (env as unknown as Env).DIFFF_KV.list({ prefix: 'page:' });
+    expect(list.keys.length).toBe(0);
+  });
+
+  it('rejects non-string a/b when they are numbers', async () => {
+    const request = new Request('http://internal/api/save', {
+      method: 'POST',
+      body: JSON.stringify({ lang: 'ja', a: 123, b: 456, passwd: '' }),
+    });
+    const res = await handleSave(request, env as unknown as Env);
+    expect(res.status).toBe(400);
+  });
 });
