@@ -7,11 +7,30 @@ import type { Messages } from '../i18n/messages.js';
 
 const messages: Messages = document.documentElement.lang === 'en' ? en : ja;
 
+const THEME_STORAGE_KEY = 'difff-theme';
+const themeToggleBtn = document.querySelector<HTMLButtonElement>('#theme-toggle-btn')!;
+
+function applyTheme(theme: 'light' | 'dark'): void {
+  document.documentElement.dataset.theme = theme;
+  themeToggleBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+applyTheme(storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : systemPrefersDark ? 'dark' : 'light');
+
+themeToggleBtn.addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem(THEME_STORAGE_KEY, next);
+  applyTheme(next);
+});
+
 const form = document.querySelector<HTMLFormElement>('#difff-form')!;
 const textareaA = document.querySelector<HTMLTextAreaElement>('#sequenceA')!;
 const textareaB = document.querySelector<HTMLTextAreaElement>('#sequenceB')!;
 const compareBtn = document.querySelector<HTMLButtonElement>('#compare-btn')!;
 const cancelBtn = document.querySelector<HTMLButtonElement>('#cancel-btn')!;
+const clearBtn = document.querySelector<HTMLButtonElement>('#clear-btn')!;
 const progress = document.querySelector<HTMLElement>('#progress')!;
 const resultSection = document.querySelector<HTMLElement>('#result')!;
 const resultTable = document.querySelector<HTMLTableElement>('#result-table')!;
@@ -60,6 +79,20 @@ cancelBtn.addEventListener('click', () => {
   compareBtn.disabled = false;
   cancelBtn.hidden = true;
   progress.hidden = true;
+});
+
+clearBtn.addEventListener('click', () => {
+  worker?.terminate();
+  worker = null;
+  textareaA.value = '';
+  textareaB.value = '';
+  compareBtn.disabled = false;
+  cancelBtn.hidden = true;
+  progress.hidden = true;
+  resultSection.hidden = true;
+  resultTable.innerHTML = '';
+  statsA.textContent = '';
+  statsB.textContent = '';
 });
 
 hideFormBtn.addEventListener('click', () => {

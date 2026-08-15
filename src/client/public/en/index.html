@@ -10,6 +10,7 @@
 <header id="top">
   <h1><a href="/en/">difff</a></h1>
   <nav>
+    <button type="button" id="theme-toggle-btn" aria-label="Toggle color theme">🌙</button>
     <a href="/">Japanese</a>
   </nav>
 </header>
@@ -24,14 +25,17 @@
     <div class="actions">
       <button type="submit" id="compare-btn">compare</button>
       <button type="button" id="cancel-btn" hidden>cancel</button>
+      <button type="button" id="clear-btn">clear</button>
       <span id="progress" hidden>computing…</span>
     </div>
   </form>
 
   <section id="result" hidden>
     <table id="result-table" cellspacing="0"></table>
-    <p id="stats-a"></p>
-    <p id="stats-b"></p>
+    <div class="stats-panes">
+      <p id="stats-a"></p>
+      <p id="stats-b"></p>
+    </div>
     <div class="result-controls">
       <button type="button" id="hide-form-btn">Hide form (print friendly)</button>
       <label><input type="radio" name="color" value="1" checked> Color 1</label>
