@@ -10,6 +10,7 @@
 <header id="top">
   <h1><a href="/">difff《ﾃﾞｭﾌﾌ》</a></h1>
   <nav>
+    <button type="button" id="theme-toggle-btn" aria-label="表示テーマ切り替え">🌙</button>
     <a href="/en/">English</a>
   </nav>
 </header>
@@ -24,14 +25,17 @@
     <div class="actions">
       <button type="submit" id="compare-btn">比較する</button>
       <button type="button" id="cancel-btn" hidden>キャンセル</button>
+      <button type="button" id="clear-btn">クリア</button>
       <span id="progress" hidden>計算中…</span>
     </div>
   </form>
 
   <section id="result" hidden>
     <table id="result-table" cellspacing="0"></table>
-    <p id="stats-a"></p>
-    <p id="stats-b"></p>
+    <div class="stats-panes">
+      <p id="stats-a"></p>
+      <p id="stats-b"></p>
+    </div>
     <div class="result-controls">
       <button type="button" id="hide-form-btn">結果のみ表示 (印刷用)</button>
       <label><input type="radio" name="color" value="1" checked> カラー1</label>

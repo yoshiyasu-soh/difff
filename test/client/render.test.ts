@@ -3,7 +3,7 @@ import { renderResultTable } from '../../src/client/render.js';
 import type { DiffResult } from '../../src/core/types.js';
 
 describe('renderResultTable', () => {
-  it('creates one <tr> with two <td> per row', () => {
+  it('creates one <tr> with a line-number cell before each side per row', () => {
     const table = document.createElement('table');
     const result: DiffResult = {
       rows: [
@@ -15,8 +15,16 @@ describe('renderResultTable', () => {
     };
     renderResultTable(table, result);
     expect(table.rows.length).toBe(2);
-    expect(table.rows[0].cells[0].textContent).toBe('x');
-    expect(table.rows[1].cells[0].querySelector('em')?.textContent).toBe('z');
+    expect(table.rows[0].cells.length).toBe(4);
+    expect(table.rows[0].cells[0].textContent).toBe('1');
+    expect(table.rows[0].cells[0].className).toBe('line-number');
+    expect(table.rows[0].cells[1].textContent).toBe('x');
+    expect(table.rows[0].cells[2].textContent).toBe('1');
+    expect(table.rows[0].cells[2].className).toBe('line-number');
+    expect(table.rows[0].cells[3].textContent).toBe('y');
+    expect(table.rows[1].cells[0].textContent).toBe('2');
+    expect(table.rows[1].cells[2].textContent).toBe('2');
+    expect(table.rows[1].cells[1].querySelector('em')?.textContent).toBe('z');
   });
 
   it('clears previous content before rendering', () => {
